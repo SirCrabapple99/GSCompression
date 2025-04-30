@@ -40,22 +40,25 @@ function convert() {
 create();
 convert();
 
-// convert input
-
+// encode
 // string to store input
 let sampleInput = "Hello World";
 // remove spaces (temp)
 sampleInput = sampleInput.replaceAll(' ', '');
 // tring to store converted input
 let sampleAdjusted = '';
+function encodeString() {
 // repeatedly add the converted pair to the end of sampleAdjusted
-for (let i = 0; i < Math.floor(sampleInput.length / 2); i++) {
-    sampleAdjusted = sampleAdjusted.concat('', oneletter[combos.indexOf(sampleInput.slice('')[i * 2] + sampleInput.slice('')[(i * 2) + 1])]);
-};
+    for (let i = 0; i < Math.floor(sampleInput.length / 2); i++) {
+        sampleAdjusted = sampleAdjusted.concat('', oneletter[combos.indexOf(sampleInput.slice('')[i * 2] + sampleInput.slice('')[(i * 2) + 1])]);
+    };
 // check if even or odd (I forgot how to do it quickly)
-let f = JSON.stringify(sampleInput.length).at(-1)
-if (f == 1 || f == 3 || f == 5 || f == 7 || f == 9) {
-    sampleAdjusted = sampleAdjusted.concat('', sampleInput.at(-1));
-}
-navigator.clipboard.writeText(sampleAdjusted);
-window.alert(sampleAdjusted);
+    let f = JSON.stringify(sampleInput.length).at(-1);
+    if (f == 1 || f == 3 || f == 5 || f == 7 || f == 9) {
+        sampleAdjusted = sampleAdjusted.concat('', sampleInput.at(-1));
+    };
+    navigator.clipboard.writeText(sampleAdjusted);
+    window.alert(sampleAdjusted);
+};
+
+encodeString();
