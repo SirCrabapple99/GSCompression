@@ -5,10 +5,15 @@ function GSSearch(string, size) {
         if (!string || !size) {console.error('missing 1+ required parameters of GSSearch(string, size)'); return;};
         let searched = [];
         for (let i = 0; i < string.length; i++) {
-                if (string.at(i) == undefined || string.at(i + 1) == undefined || string.at(i + 2) == undefined) {
-                      return searched;
+                for (let x = 0; x < size; x++) {
+                        if (string.at(i + x) == undefined) {
+                                return searched;
+                            };
                     };
-                searched.push([string.at(i) + string.at(i + 1) + string.at(i + 2), i+':'+size]);
+                searched.push([string.at(i), i+':'+size]);
+                for (let x = 0; x < size; x++) {
+                        searched[i][0] += string.at(i + x);
+                    };
             };
         return searched;
     };
@@ -35,11 +40,11 @@ function GSMatch(searched, min) {
             };
         // only return matches that repeat >= min times
         for (let i = 0; i < matches.length; i++) {
-                if (i[1] <= min) {
+                if (matches[i][1] < min) {
                         matches.splice(i, 1);
+                        i -= 1;
                     };
             };
         return matches;
     };
-window.alert(GSMatch(GSSearch(tempstring, 2), 3))
-window.alert(GSSearch(tempstring, 2))
+window.alert(GSMatch(GSSearch(tempstring, 2), 1))
