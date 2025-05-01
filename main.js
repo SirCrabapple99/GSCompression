@@ -1,17 +1,19 @@
 let GSDictionary = [];
 const tempstring = `The quick brown fox jumped over the lazy dog`;
-// take provided string and return pairs of (size)
+// goes through every letter, creates a group of it and the next (size - 1) letters, and returns an array structured [[group, (pos of first charachter):size], [group, (pos of first character):size], [group, (pos of first character):size]]
+// example output: [['abc', 0:3], ['bcd', 1:3], ['cde', 2:3]]
+// example usage: GSSearch('The quick brown fox jumped over the lazy dog', 3)
 function GSSearch(string, size) {
         if (!string || !size) {console.error('missing 1+ required parameters of GSSearch(string, size)'); return;};
         let searched = [];
         for (let i = 0; i < string.length; i++) {
-                // make sure it only picks complete pairs of (size)
+                // make sure it only picks complete groups of (size)
                 for (let x = 0; x < size; x++) {
                         if (string.at(i + x) == undefined) {
                                 return searched;
                             };
                     };
-                // add pair to list as well as it's position in the text (to check if it is intersecting with other pairs later)
+                // add group to list as well as it's position in the text (to check if it is intersecting with other groups later)
                 searched.push([string.at(i), i+':'+size]);
                 for (let x = 1; x < size; x++) {
                         searched[i][0] += string.at(i + x);
@@ -19,7 +21,9 @@ function GSSearch(string, size) {
             };
         return searched;
     };
-// count how many there are of each match
+// count how many there are of each match and returns all higher than the defined minimum, outputs an array structured [[match, amount], [match, amount], [match, amount]]
+// example output: [['abc', 4], ['qrs', 4], ['tuv', 2]]
+// example usage: GSMatch(GSSearch('The quick brown fox jumped over the lazy dog', 3), 3)
 function GSMatch(searched, min) {
         if (!searched || !min) {console.error('missing 1+ required parameters of GSMatch(searched, min)'); return;};
         let matches = [];
@@ -49,14 +53,16 @@ function GSMatch(searched, min) {
             };
         return matches;
     };
-// check which matches are the best to keep and which intersect, not optimized for best possible matches
+// check which matches are the best to keep and which have intersecting letters, not optimized for best possible matches
 function GSBest(topMatches, searched) {
         if (!topMatches || !searched) {console.error('missing 1+ required parameters of GSBest(topMatches, searched)'); return;};
         let matchPos = [];
         for (let i in topMatches) {
                 matchPos.push([]);
                 for (let i in searched) {
-                        
+                        if (i[]) {
+
+                            }
                     };
             };
     };
