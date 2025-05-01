@@ -1,5 +1,5 @@
 let GSDictionary = [];
-const tempstring = `The quick brown fox jumped over the lazy dog`;
+const tempstring = `eee eee eee aaa aaa bbb`;
 // goes through every letter, creates a group of it and the next (size - 1) letters, and returns an array structured [[group, (pos of first charachter):size], [group, (pos of first character):size], [group, (pos of first character):size]]
 // example output: [['abc', 0:3], ['bcd', 1:3], ['cde', 2:3]]
 // example usage: GSSearch('The quick brown fox jumped over the lazy dog', 3)
@@ -59,13 +59,16 @@ function GSBest(topMatches, searched) {
     // grabbing the positions of the top matches
     let best = topMatches;
     let matchPos = [];
-    for (let i in topMatches) {
+    for (let i = 0; i < topMatches.length; i++) {
         matchPos.push([]);
-        for (let x in searched) {
-            
+        for (let x = 0; x < searched.length; x++) {
+            if (searched[x][0] == topMatches[i][0]) {
+                matchPos[i].push(searched[x][1]);
+            };
         };
     };
     return matchPos;
 };
 //window.alert(GSMatch(GSSearch(tempstring, 3), 2));
-window.alert(GSBest(GSMatch(GSSearch(tempstring, 3), 2), GSSearch(tempstring, 3)));
+window.alert(GSBest(GSMatch(GSSearch(tempstring, 3), 3), GSSearch(tempstring, 3))[1]);
+window.alert(GSMatch(GSSearch(tempstring, 3), 3));
