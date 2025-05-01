@@ -1,5 +1,5 @@
 let GSDictionary = [];
-const tempstring = 'eee eee eee eee aaa aaa aaa sss sss ddd';
+const tempstring = `The quick brown fox jumped over the lazy dog`;
 // take provided string and return pairs of (size)
 function GSSearch(string, size) {
         if (!string || !size) {console.error('missing 1+ required parameters of GSSearch(string, size)'); return;};
@@ -11,7 +11,7 @@ function GSSearch(string, size) {
                             };
                     };
                 searched.push([string.at(i), i+':'+size]);
-                for (let x = 0; x < size; x++) {
+                for (let x = 1; x < size; x++) {
                         searched[i][0] += string.at(i + x);
                     };
             };
@@ -47,4 +47,8 @@ function GSMatch(searched, min) {
             };
         return matches;
     };
-window.alert(GSMatch(GSSearch(tempstring, 2), 1))
+// check which matches are the best to keep and which intersect, not optimized based off other matches
+function GSBest() {
+        
+    }
+window.alert(GSMatch(GSSearch(tempstring, 3), 2))
