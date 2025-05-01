@@ -5,11 +5,13 @@ function GSSearch(string, size) {
         if (!string || !size) {console.error('missing 1+ required parameters of GSSearch(string, size)'); return;};
         let searched = [];
         for (let i = 0; i < string.length; i++) {
+                // make sure it only picks complete pairs of (size)
                 for (let x = 0; x < size; x++) {
                         if (string.at(i + x) == undefined) {
                                 return searched;
                             };
                     };
+                // add pair to list as well as it's position in the text (to check if it is intersecting with other pairs later)
                 searched.push([string.at(i), i+':'+size]);
                 for (let x = 1; x < size; x++) {
                         searched[i][0] += string.at(i + x);
@@ -47,8 +49,16 @@ function GSMatch(searched, min) {
             };
         return matches;
     };
-// check which matches are the best to keep and which intersect, not optimized based off other matches
-function GSBest() {
-        
-    }
-window.alert(GSMatch(GSSearch(tempstring, 3), 2))
+// check which matches are the best to keep and which intersect, not optimized for best possible matches
+function GSBest(topMatches, searched) {
+        if (!topMatches || !searched) {console.error('missing 1+ required parameters of GSBest(topMatches, searched)'); return;};
+        let matchPos = [];
+        for (let i in topMatches) {
+                matchPos.push([]);
+                for (let i in searched) {
+                        
+                    };
+            };
+    };
+window.alert(GSMatch(GSSearch(tempstring, 3), 2));
+GSBest(GSMatch(GSSearch(tempstring, 3), 2));
