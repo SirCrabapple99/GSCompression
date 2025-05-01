@@ -1,76 +1,35 @@
-// set up character pairs
-
-// define accepted characters, ex: abc[special characters]ABC
-let GSChar = 'abcdefghijklmnopqrstuvwxyz !ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-// convert into array
-GSChar = GSChar.split('');
-// array for every possible character pair
-let GSCombos = [];
-// array for single characters
-let GSUnicode = [[], []];
-// just to make the code a little smaller
-const GSCharNumber = GSChar.length - 26;
-// generate character pairs
-function create() {
-        for (let i = 0; i < GSCharNumber; i++) {
-            for (let x = 0; x < GSCharNumber; x++) {
-                GSCombos.push(GSChar[i] + GSChar[x + 26]);
+let dict = [];
+const h = 'eee eee eee eee aaa aaa aaa sss sss ddd';
+function GSMatch(searched, min) {
+        if (!searched || !min) {console.error('missing 1+ required parameters of GSMatch(searched, min)'); return;};
+        let matches = [];
+        for (let i = 0; i < searched.length; i++) {
+                let re = new RegExp(searched[i][0], 'g');
+                let newMatch = -1;
+                for (let x = 0; x < matches.length; x++) {
+                        if (matches[x][1] == searched[i][0]) {
+                            newMatch = x;
+                            x += matches.length + 1
+                        }
+                    };
+                if (newMatch == -1) {
+                        matches.push([searched[i][0], searched[i][0].match(re).length]);
+                    } else {
+                        matches[newMatch][1] += 1;
+                    };
             };
-        };
-        for (let i = 0; i < GSCharNumber; i++) {
-            for (let x = 0; x < GSCharNumber; x++) {
-                GSCombos.push(GSChar[x + 26] + GSChar[i]);
+        return matches;
+    };
+// take provided string and return pairs of (size) for every letter
+function GSSearch(string, size) {
+        if (!string || !size) {console.error('missing 1+ required parameters of GSSearch(string, size)'); return;};
+        let searched = [];
+        for (let i = 0; i < string.length; i++) {
+                if (string.at(i) == undefined || string.at(i + 1) == undefined || string.at(i + 2) == undefined) {
+                        return searched;
+                    };
+                searched.push([string.at(i) + string.at(i + 1) + string.at(i + 2), i+':'+size]);
             };
-        };
-        for (let i = 0; i < GSCharNumber; i++) {
-            for (let x = 0; x < GSCharNumber; x++) {
-                GSCombos.push(GSChar[i] + GSChar[x]);
-            };
-        };
-        for (let i = 0; i < GSCharNumber; i++) {
-            for (let x = 0; x < GSCharNumber; x++) {
-                GSCombos.push(GSChar[i + 26] + GSChar[x + 26]);
-            };
-        };
+        return searched;
     };
-// characters from https://raw.githubusercontent.com/bits/UTF-8-Unicode-Test-Documents/refs/heads/master/UTF-8_sequence_separated/utf8_sequence_0-0x10ffff_assigned_printable.txt
-function convert() {
-        for (let i = 0; i < GSCombos.length; i++) {
-            GSUnicode[0].push(GSUnicodeData.at(i));
-            GSUnicode[1].push(GSCombos[i]);
-        };
-     // alert(GSUnicode[0][0])
-    };
-create();
-convert();
-
-// encoding
-function GSEncode(input) {
-// string to store output
-        let output = '';
-// repeatedly add the converted pair to the end of sampleAdjusted
-        for (let i = 0; i < Math.floor(input.length / 2); i++) {
-            output = output.concat('', GSUnicode[0][GSCombos.indexOf(input.at(i * 2) + input.at((i * 2) + 1))]);
-        };
-// check if even or odd
-        let f = JSON.stringify(input.length / 2).at(-1);
-        if (f % 2 !== 0) {
-            output = output.concat('', GSUnicode[0][GSCombos.indexOf(input.at(-1) + ' ')]);
-        };
-        return output;
-    };
-
-// decoding
-function GSDecode(input) {
-// string to store output
-        let output = '';
-// repeatedly add the converted pair to the end of sampleAdjusted
-        for (let i = 0; i < input.length; i++) {
-            output = output.concat('', GSUnicode[1][GSUnicode[0].indexOf(input.at(i))]);
-        };
-        if (output.at(-1) == ' ') {
-            output.split(0, -1);
-        }
-        return output;
-    };
-window.alert(GSDecode(GSEncode('Hello World! ')));
+window.alert(GSMatch(GSSearch(h, 3), 3).sort())
