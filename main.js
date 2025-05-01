@@ -56,15 +56,16 @@ function GSMatch(searched, min) {
 // check which matches are the best to keep and which have intersecting letters, not optimized for best possible matches
 function GSBest(topMatches, searched) {
     if (!topMatches || !searched) {console.error('missing 1+ required parameters of GSBest(topMatches, searched)'); return;};
+    // grabbing the positions of the top matches
+    let best = topMatches;
     let matchPos = [];
     for (let i in topMatches) {
         matchPos.push([]);
-        for (let i in searched) {
-            if (i[]) {
-                
-            }
+        for (let x in searched) {
+            
         };
     };
+    return matchPos;
 };
-window.alert(GSMatch(GSSearch(tempstring, 3), 2));
-GSBest(GSMatch(GSSearch(tempstring, 3), 2));
+//window.alert(GSMatch(GSSearch(tempstring, 3), 2));
+window.alert(GSBest(GSMatch(GSSearch(tempstring, 3), 2), GSSearch(tempstring, 3)));
