@@ -27,10 +27,10 @@ function GSSearch(string, size) {
 function GSMatch(searched, min) {
     if (!searched || !min) {console.error('missing 1+ required parameters of GSMatch(searched, min)'); return;};
     let matches = [];
-    for (let i = 0; i < searched.length; i++) {
+    for (let i in searched) {
         let newMatch = -1;
         // check if match is new
-        for (let x = 0; x < matches.length; x++) {
+        for (let x in matches) {
             if (matches[x][0] == searched[i][0]) {
                 newMatch = x;
                 x += matches.length + 1;
@@ -56,19 +56,25 @@ function GSMatch(searched, min) {
 // check which matches are the best to keep and which have intersecting letters, not optimized for best possible matches
 function GSBest(topMatches, searched) {
     if (!topMatches || !searched) {console.error('missing 1+ required parameters of GSBest(topMatches, searched)'); return;};
-    // grabbing the positions of the top matches
+    // grab the positions of the top matches
     let best = topMatches;
     let matchPos = [];
-    for (let i = 0; i < topMatches.length; i++) {
+    for (let i in topMatches) {
         matchPos.push([]);
         for (let x = 0; x < searched.length; x++) {
             if (searched[x][0] == topMatches[i][0]) {
-                matchPos[i].push(searched[x][1]);
+                for (let y = 0; y < searched[x][1].at(-1); y++) {
+                    matchPos[i].push(Number.parseInt(searched[x][1].split(':')[0]) + y);
+                };
             };
         };
+    };
+    // determine whether or not any matches intersect
+    for (let i in matchPos) {
+        
     };
     return matchPos;
 };
 //window.alert(GSMatch(GSSearch(tempstring, 3), 2));
-window.alert(GSBest(GSMatch(GSSearch(tempstring, 3), 3), GSSearch(tempstring, 3))[1]);
+window.alert(GSBest(GSMatch(GSSearch(tempstring, 3), 3), GSSearch(tempstring, 3)));
 window.alert(GSMatch(GSSearch(tempstring, 3), 3));
