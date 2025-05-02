@@ -73,6 +73,7 @@ function GSWriteDict(input) {
 };
 
 // output text
+// example usage: GSOutput('The quick brown fox jumped over the lazy dog', 1)
 function GSOutput(string, aa) {
     if (!string) {console.error('missing 1+ required parameters of GSOutput(string)'); return;};
     if (aa == 1) {
@@ -80,7 +81,7 @@ function GSOutput(string, aa) {
     navigator.clipboard.writeText(string);
     return
     };
-    document.getElementById('GSOutput').innerHTML = GSDictionary + ':::' + string;
+    //document.getElementById('GSOutput').innerHTML = GSDictionary + ':::' + string;
     navigator.clipboard.writeText(GSDictionary + ':::' + string);
 };
 // encode data
@@ -99,11 +100,13 @@ function GSEncode(string, groupsize) {
             let f = new RegExp(GSDictionary[GSDictionary.length - 1][1], 'g');
             newString = newString.replaceAll(f, '');
             finalString = finalString.replaceAll(f, GSDictionary[GSDictionary.length - 1][0]);
-            GSOutput(finalString);
         };
     };
+    GSOutput(finalString);
 };
 
+// decode encoded text
+// example usage: GSDecode('The quick brown fox jumped over the lazy dog')
 function GSDecode(string) {
     if (!string) {console.error('missing 1+ required parameters of GSDecode(string)'); return;};
     GSDictionary = [];
