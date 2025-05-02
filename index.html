@@ -1,13 +1,12 @@
-<!doctype html>
+<!doctype HTML>
 <html>
   <head>
     <title>GSCompression</title>
   </head>
   <body>
-    <p>This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
-    <button onclick="GSEncode()">encode</button><br>
-    <button onclick="GSDecode()">decode</button><br><br>
-    <div>Input field</div>
+    <button onclick="GSEncode(window.prompt('input'), parseInt(window.prompt('group size')))">encode</button><br>
+    <button onclick="GSDecode(window.prompt('input'))">decode</button><br><br>
+    <div id="GSOutput">Input field</div>
     <script src="GSCompress.js"></script>
 </body>
 </html>
