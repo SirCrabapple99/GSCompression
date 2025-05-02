@@ -52,7 +52,7 @@ function GSMatch(searched, min) {
     };
     return matches;
 };
-// check which matches are the best to keep and which have intersecting letters, not yet optimized for best possible matches
+// check which matches are the best to keep and which have intersecting letters (unused)
 // example usage: GSBest(GSMatch(GSSearch('The quick brown fox jumped over the lazy dog', 3), 3), GSSearch('The quick brown fox jumped over the lazy dog', 3))
 /* function GSBest(topMatches, searched) {
     if (!topMatches || !searched) {console.error('missing 1+ required parameters of GSBest(topMatches, searched)'); return;};
@@ -91,7 +91,7 @@ function GSMatch(searched, min) {
 // grab match with most instances
 // example usage: GSBest(GSMatch(GSSearch(tempstring, 3), 2))
 function GSBest(matchList) {
-    if (!topMatches || !searched) {console.error('missing 1+ required parameters of GSBest(matchList)'); return;};
+    if (!matchList) {console.error('missing 1+ required parameters of GSBest(matchList)'); return;};
     let highest = [];
     for (let i in matchList) {
         highest.push(matchList[1]);
@@ -101,9 +101,16 @@ function GSBest(matchList) {
 };
 
 // encode top matches and store in dictionary
+// example usage: GSWriteDict(match)
 let GSDictionary = [];
 function GSWriteDict(input) {
+    if (!input) {console.error('missing 1+ required parameters of GSWriteDict(input)'); return;};
     GSDictionary.push([input, String.fromCharCode(GSDictionary.length)]);
 };
 
-window.alert(GSBest(GSMatch(GSSearch(tempstring, 3), 2)));
+// output text
+function GSOutput() {
+    document.getElementById('GSOutput').innerHTML = GSDictionary;
+}
+GSWriteDict(GSBest(GSMatch(GSSearch(tempstring, 3), 2))[0]);
+GSOutput()
