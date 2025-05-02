@@ -1,4 +1,3 @@
-let GSDictionary = [];
 const tempstring = `eee eee eee aaa aaa bbb`;
 // goes through every letter, creates a group of it and the next (size - 1) letters, and returns an array structured [[group, (pos of first charachter):size], [group, (pos of first character):size], [group, (pos of first character):size]]
 // example output: [['abc', 0:3], ['bcd', 1:3], ['cde', 2:3]]
@@ -53,11 +52,12 @@ function GSMatch(searched, min) {
     };
     return matches;
 };
-// check which matches are the best to keep and which have intersecting letters, not optimized for best possible matches
-function GSBest(topMatches, searched) {
+// check which matches are the best to keep and which have intersecting letters, not yet optimized for best possible matches
+// example usage: GSBest(GSMatch(GSSearch('The quick brown fox jumped over the lazy dog', 3), 3), GSSearch('The quick brown fox jumped over the lazy dog', 3))
+/* function GSBest(topMatches, searched) {
     if (!topMatches || !searched) {console.error('missing 1+ required parameters of GSBest(topMatches, searched)'); return;};
     // grab the positions of the top matches
-    let best = topMatches;
+    let best = topMatches[0];
     let matchPos = [];
     for (let i in topMatches) {
         matchPos.push([]);
@@ -70,11 +70,40 @@ function GSBest(topMatches, searched) {
         };
     };
     // determine whether or not any matches intersect
+    let intersects = [];
     for (let i in matchPos) {
-        
+        intersects.push([])
+        for (let x in matchPos[i]) {
+            for (let y in matchPos) {
+                for (let z in matchPos[y]) {
+                    if (matchPos[i][x] == matchPos[y][z] && matchPos[i] != matchPos[z]) {
+                        intersects[i].push(matchPos[y][z])
+                    }
+                }
+            }
+        }
     };
-    return matchPos;
-};
+    // return the highest one
+    return intersections;
+}; */
 //window.alert(GSMatch(GSSearch(tempstring, 3), 2));
-window.alert(GSBest(GSMatch(GSSearch(tempstring, 3), 3), GSSearch(tempstring, 3)));
-window.alert(GSMatch(GSSearch(tempstring, 3), 3));
+
+// grab match with most instances
+// example usage: GSBest(GSMatch(GSSearch(tempstring, 3), 2))
+function GSBest(matchList) {
+    if (!topMatches || !searched) {console.error('missing 1+ required parameters of GSBest(matchList)'); return;};
+    let highest = [];
+    for (let i in matchList) {
+        highest.push(matchList[1]);
+    };
+    highest.sort();
+    return highest[0];
+};
+
+// encode top matches and store in dictionary
+let GSDictionary = [];
+function GSWriteDict(input) {
+    GSDictionary.push([input, String.fromCharCode(GSDictionary.length)]);
+};
+
+window.alert(GSBest(GSMatch(GSSearch(tempstring, 3), 2)));
