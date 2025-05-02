@@ -81,8 +81,8 @@ function GSOutput(string, aa) {
     navigator.clipboard.writeText(string);
     return
     };
-    //document.getElementById('GSOutput').innerHTML = GSDictionary + ':::' + string;
-    navigator.clipboard.writeText(GSDictionary + ':::' + string);
+    //document.getElementById('GSOutput').innerHTML = GSDictionary + 'ÿ' + string;
+    navigator.clipboard.writeText(GSDictionary + 'ÿ' + string);
 };
 // encode data
 // example usage: GSEncode('The quick brown fox jumped over the lazy dog', 2)
@@ -93,17 +93,16 @@ function GSEncode(string, groupsize) {
     let finalString = string;
     for (let i = 0; i > -1;) {
         if (GSDictionary.length >= 255 || !GSBest(GSMatch(GSSearch(newString, groupsize), 2))) {
-            GSOutput(finalString);
-            return;
+            break;
         } else {
         // only using 1 byte characters for now, maybe I will implement 2 byte characters later
             GSWriteDict(GSBest(GSMatch(GSSearch(newString, groupsize), 2)));
             let f = new RegExp(GSDictionary[GSDictionary.length - 1], 'g');
             newString = newString.replaceAll(f, '');
             finalString = finalString.replaceAll(f, String.fromCharCode(GSDictionary.length - 1));
-            GSOutput(finalString);
         };
     };
+    GSOutput(finalString);
 };
 
 // decode encoded text
@@ -116,10 +115,10 @@ function GSDecode(string) {
     let b = [''];
     // put dictionary in array
     for (let i = 0; i < string.length; i++) {
-        if (!(string.at(i) == ':' && string.at(i + 1) == ':' && string.at(i + 2) == ':')) {
+        if (!(string.at(i) == 'ÿ')) {
             s += string.at(i);
         } else {
-            s += ':::'
+            s += 'ÿ'
             break;
         };
         if (string.at(i) != ',') {
