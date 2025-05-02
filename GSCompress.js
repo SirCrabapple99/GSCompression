@@ -77,12 +77,11 @@ function GSWriteDict(input) {
 function GSOutput(string, aa) {
     if (!string) {console.error('missing 1+ required parameters of GSOutput(string)'); return;};
     if (aa == 1) {
-    document.getElementById('GSOutput').innerHTML = string;
     navigator.clipboard.writeText(string);
     return
     };
-    //document.getElementById('GSOutput').innerHTML = GSDictionary + 'ÿ' + string;
-    navigator.clipboard.writeText(GSDictionary + 'ÿ' + string);
+    //document.getElementById('GSOutput').innerHTML = GSDictionary + String.fromCharCode(255) + string;
+    navigator.clipboard.writeText(GSDictionary + String.fromCharCode(255) + string);
 };
 // encode data
 // example usage: GSEncode('The quick brown fox jumped over the lazy dog', 2)
@@ -115,10 +114,10 @@ function GSDecode(string) {
     let b = [''];
     // put dictionary in array
     for (let i = 0; i < string.length; i++) {
-        if (!(string.at(i) == 'ÿ')) {
+        if (!(string.at(i) == String.fromCharCode(255))) {
             s += string.at(i);
         } else {
-            s += 'ÿ'
+            s += String.fromCharCode(255)
             break;
         };
         if (string.at(i) != ',') {
