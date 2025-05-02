@@ -79,17 +79,17 @@ function GSOutput() {
 };
 
 // encode data
-// example usage: GSEncode('The quick brown fox jumped over the lazy dog')
-function GSEncode(string) {
-    if (!string) {console.error('missing 1+ required parameters of GSWriteDict(string)'); return;};
+// example usage: GSEncode('The quick brown fox jumped over the lazy dog', 2)
+function GSEncode(string, groupsize) {
+    if (!string || !groupsize) {console.error('missing 1+ required parameters of GSWriteDict(string, groupsize)'); return;};
     GSDictionary = [];
     let newString = string;
     for (let i = 0; i > -1;) {
-        if (GSDictionary.length >= 255 || GSBest(GSMatch(GSSearch(newString, 2), 2))[1] < 2) {
+        if (GSDictionary.length >= 255 || GSBest(GSMatch(GSSearch(newString, groupsize), 2))[1] < 2) {
             break;
         } else {
         // only using 1 byte characters for now, maybe I will implement 2 byte characters later
-            GSWriteDict(GSBest(GSMatch(GSSearch(newString, 2), 2)));
+            GSWriteDict(GSBest(GSMatch(GSSearch(newString, groupsize), 2)));
             let f = new RegExp(GSDictionary[GSDictionary.length - 1][1], 'g');
             newString = newString.replaceAll(f, 'g');
             GSOutput();
@@ -97,4 +97,4 @@ function GSEncode(string) {
     };
 };
 //GSWriteDict(GSBest(GSMatch(GSSearch('eee eee eee aaa aaa bbb', 3), 2)));
-GSEncode(`awdwaawdijoaadinawikidawnaijowgyuhieap8y`);
+GSEncode(`The quick brown fox jumped over the lazy dog`, 2);
