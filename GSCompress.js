@@ -69,7 +69,7 @@ function GSBest(matchList) {
 let GSDictionary = [];
 function GSWriteDict(input) {
     if (!input) {console.error('missing 1+ required parameters of GSWriteDict(input)'); return;};
-    GSDictionary.push([String.fromCharCode(GSDictionary.length), input[0]]);
+    GSDictionary.push(input[0]);
 };
 
 // output text
@@ -93,16 +93,17 @@ function GSEncode(string, groupsize) {
     let finalString = string;
     for (let i = 0; i > -1;) {
         if (GSDictionary.length >= 255 || !GSBest(GSMatch(GSSearch(newString, groupsize), 2))) {
+            GSOutput(finalString);
             return;
         } else {
         // only using 1 byte characters for now, maybe I will implement 2 byte characters later
             GSWriteDict(GSBest(GSMatch(GSSearch(newString, groupsize), 2)));
-            let f = new RegExp(GSDictionary[GSDictionary.length - 1][1], 'g');
+            let f = new RegExp(GSDictionary[GSDictionary.length - 1], 'g');
             newString = newString.replaceAll(f, '');
-            finalString = finalString.replaceAll(f, GSDictionary[GSDictionary.length - 1][0]);
+            finalString = finalString.replaceAll(f, String.fromCharCode(GSDictionary.length - 1));
+            GSOutput(finalString);
         };
     };
-    GSOutput(finalString);
 };
 
 // decode encoded text
@@ -128,15 +129,15 @@ function GSDecode(string) {
         };
     };
     // push to dictionary
-    for (let i = 0; i < b.length / 2; i++) {
-        GSDictionary.push([b[i * 2], b[(i * 2) + 1]]);
+    for (let i = 0; i < b.length; i++) {
+        GSDictionary.push(b.at(i));
     };
     // grab string without dictionary
     let final = string.replace(s, '');
     // replace all the bytes according to the dictionary
     for (let i = 0; i < GSDictionary.length; i++) {
-        let re = new RegExp(GSDictionary[i][0], 'g');
-        final = final.replaceAll(re, GSDictionary[i][1]);
+        let re = new RegExp(String.fromCharCode(i), 'g');
+        final = final.replaceAll(re, GSDictionary[i]);
     };
     GSOutput(final, 1);
 };
