@@ -58,7 +58,7 @@ function GSBest(matchList) {
     if (!matchList) {console.error('missing 1+ required parameters of GSBest(matchList)'); return;};
     let highest = [];
     for (let i in matchList) {
-        highest.push(matchList[1]);
+        highest.push(matchList[i]);
     };
     highest.sort();
     return highest[0];
@@ -69,34 +69,32 @@ function GSBest(matchList) {
 let GSDictionary = [];
 function GSWriteDict(input) {
     if (!input) {console.error('missing 1+ required parameters of GSWriteDict(input)'); return;};
-    GSDictionary.push([String.fromCharCode(GSDictionary.length), input]);
+    GSDictionary.push([String.fromCharCode(GSDictionary.length), input[0]]);
 };
 
 // output text
 function GSOutput() {
-    let outputData = '';
-    for (let i in GSDictionary) {
-        outputData += GSDictionary[i][0];
-    };
-    document.getElementById('GSOutput').innerHTML = outputData;
-    navigator.clipboard.writeText(outputData);
+    document.getElementById('GSOutput').innerHTML = GSDictionary;
+    navigator.clipboard.writeText(GSDictionary);
 };
 
 // encode data
 // example usage: GSEncode('The quick brown fox jumped over the lazy dog')
 function GSEncode(string) {
-    let GSDictionary = [];
     if (!string) {console.error('missing 1+ required parameters of GSWriteDict(string)'); return;};
+    GSDictionary = [];
     let newString = string;
-    for (let i = 0; i > -1; i++) {
-        // only using 1 byte characters for now, maybe I will implement 3 byte characters later
-        if (!(GSBest(GSMatch(GSSearch(newString, 3), 2)).length > 0) || GSDictionary.length >= 255) {
-            i = -2;
+    for (let i = 0; i > -1;) {
+        if (GSDictionary.length >= 255 || GSBest(GSMatch(GSSearch(newString, 2), 2))[1] < 2) {
+            break;
         } else {
-            GSWriteDict(GSBest(GSMatch(GSSearch(newString, 3), 2)));
-            newString.replaceAll(GSBest(GSMatch(GSSearch(newString, 3), 2)), '');
+        // only using 1 byte characters for now, maybe I will implement 2 byte characters later
+            GSWriteDict(GSBest(GSMatch(GSSearch(newString, 2), 2)));
+            let f = new RegExp(GSDictionary[GSDictionary.length - 1][1], 'g');
+            newString = newString.replaceAll(f, 'g');
+            GSOutput();
         };
     };
-    GSOutput();
 };
-GSEncode('eee eee eee aaa aaa bbb');
+//GSWriteDict(GSBest(GSMatch(GSSearch('eee eee eee aaa aaa bbb', 3), 2)));
+GSEncode(`awdwaawdijoaadinawikidawnaijowgyuhieap8y`);
