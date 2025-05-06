@@ -1,4 +1,4 @@
-const GSAlphabet = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`;
+const GSAlphabet = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ `;
 let GSDictionary = [];
 
 const example = 'The quick brown fox jumped over the lazy dog';
