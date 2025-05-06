@@ -1,141 +1,89 @@
-// goes through every letter, creates a group of it and the next (size - 1) letters, and returns an array structured [[group, (pos of first charachter):size], [group, (pos of first character):size], [group, (pos of first character):size]]
-// example output: [['abc', 0:3], ['bcd', 1:3], ['cde', 2:3]]
-// example usage: GSSearch('The quick brown fox jumped over the lazy dog', 3)
-function GSSearch(string, size) {
-    if (!string || !size) {console.error('missing 1+ required parameters of GSSearch(string, size)'); return;};
+const GSAlphabet = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`;
+let GSDictionary = [];
+
+const example = 'The quick brown fox jumped over the lazy dog';
+
+function GSGenDictionary() {
+    for (let i = 0; i < 128; i++) {
+        GSDictionary.push('reserved');
+    };
+    for (let i in GSAlphabet) {
+        for (let x in GSAlphabet) {
+            GSDictionary.push(GSAlphabet[i] + GSAlphabet[x]);
+        };
+    };
+};
+GSGenDictionary();
+
+// get match with most repeats
+function GSGetBest(string, min) {
+    // loop over text and grab pairs of 2
     let searched = [];
     for (let i = 0; i < string.length; i++) {
-        // make sure it only picks complete groups of (size)
-        for (let x = 0; x < size; x++) {
-            if (string.at(i + x) == undefined) {
-                return searched;
-            };
+        if (string[i + 1] == undefined) {
+            break;
         };
-        // add group to list as well as it's position in the text (to check if it is intersecting with other groups later)
-        searched.push([string.at(i), i+':'+size]);
-        for (let x = 1; x < size; x++) {
-            searched[i][0] += string.at(i + x);
-        };
+        searched.push(string[i] + string[i + 1]);
     };
-    return searched;
-};
-// count how many there are of each match and returns all higher than the defined minimum, outputs an array structured [[match, amount], [match, amount], [match, amount]]
-// example output: [['abc', 4], ['qrs', 4], ['tuv', 2]]
-// example usage: GSMatch(GSSearch('The quick brown fox jumped over the lazy dog', 3), 3)
-function GSMatch(searched, min) {
-    if (!searched || !min) {console.error('missing 1+ required parameters of GSMatch(searched, min)'); return;};
-    let matches = [];
+    
+    // turn into a string so .search() can be used but seperate each pair with a character so that they don't get mixed together
+    let matches = '';
     for (let i in searched) {
-        let newMatch = -1;
-        // check if match is new
-        for (let x in matches) {
-            if (matches[x][0] == searched[i][0]) {
-                newMatch = x;
-                x += matches.length + 1;
-            };
-        };
-        // if match is new, add it to match list, otherwise increase it's value
-        let re = new RegExp(searched[i][0], 'g');
-        if (newMatch == -1) {
-            matches.push([searched[i][0], searched[i][0].match(re).length]);
-        } else {
-            matches[newMatch][1] += 1;
-        };
+        matches += String.fromCharCode(99999)+searched[i];
     };
-    // only return matches that repeat >= min times
-    for (let i = 0; i < matches.length; i++) {
-        if (matches[i][1] < min) {
-            matches.splice(i, 1);
+
+    // find the amount of times each match appears
+    let best = [];
+    for (let i in searched) {
+        let re = new RegExp(searched[i], 'g');
+        best.push([searched[i], matches.match(re).length]);
+    };
+    
+    // remove matches that appear < min times
+    for (let i = 0; i < best.length; i++) {
+        if (best[i][1] < min) {
+            best.splice(i, 1);
             i -= 1;
         };
     };
-    return matches;
-};
 
-// grab match with most instances
-// example usage: GSBest(GSMatch(GSSearch(tempstring, 3), 2))
-function GSBest(matchList) {
-    if (!matchList) {console.error('missing 1+ required parameters of GSBest(matchList)'); return;};
-    let highest = [];
-    for (let i in matchList) {
-        highest.push(matchList[i]);
-    };
-    highest.sort();
-    return highest[0];
-};
+    // sort matches
+    best.sort((a, b) => a[1] - b[1]);
+    best.reverse();
 
-// encode top matches and store in dictionary
-// example usage: GSWriteDict(GSBest(GSMatch(GSSearch(tempstring, 3), 2)))
-let GSDictionary = [];
-function GSWriteDict(input) {
-    if (!input) {console.error('missing 1+ required parameters of GSWriteDict(input)'); return;};
-    GSDictionary.push(input[0]);
-};
+    // return best
+    return best[0];
+}
 
-// output text
-// example usage: GSOutput('The quick brown fox jumped over the lazy dog', 1)
-function GSOutput(string, aa) {
-    if (!string) {console.error('missing 1+ required parameters of GSOutput(string)'); return;};
-    if (aa == 1) {
-    navigator.clipboard.writeText(string);
-    return
-    };
-    //document.getElementById('GSOutput').innerHTML = GSDictionary + String.fromCharCode(255) + string;
-    navigator.clipboard.writeText(GSDictionary + String.fromCharCode(255) + string);
-};
-// encode data
-// example usage: GSEncode('The quick brown fox jumped over the lazy dog', 2)
-function GSEncode(string, groupsize) {
-    if (!string || !groupsize) {console.error('missing 1+ required parameters of GSWriteDict(string, groupsize)'); return;};
-    GSDictionary = [];
-    let newString = string;
-    let finalString = string;
-    for (let i = 0; i > -1;) {
-        if (GSDictionary.length >= 255 || !GSBest(GSMatch(GSSearch(newString, groupsize), 2))) {
+// encode a string
+function GSEncode(string, min) {
+    // replace best matches with character
+    let newString = string; 
+    let encoded = string;
+    let tempDict = [];
+    for (let i = 0; i == 0;) {
+        if (GSGetBest(newString, min) == undefined) {
             break;
-        } else {
-        // only using 1 byte characters for now, maybe I will implement 2 byte characters later
-            GSWriteDict(GSBest(GSMatch(GSSearch(newString, groupsize), 2)));
-            let f = new RegExp(GSDictionary[GSDictionary.length - 1], 'g');
-            newString = newString.replaceAll(f, '');
-            finalString = finalString.replaceAll(f, String.fromCharCode(GSDictionary.length - 1));
         };
+        tempDict.push(GSGetBest(newString, min));
+        let re = new RegExp(tempDict[tempDict.length - 1][0], 'g');
+        newString = newString.replaceAll(re, '');
+        s = String.fromCharCode(GSDictionary.indexOf(tempDict[tempDict.length - 1][0]))
+        encoded = encoded.replaceAll(re, String.fromCharCode(GSDictionary.indexOf(tempDict[tempDict.length - 1][0])));
     };
-    GSOutput(finalString);
+    return encoded;
 };
 
-// decode encoded text
-// example usage: GSDecode('The quick brown fox jumped over the lazy dog')
+// decode a string
 function GSDecode(string) {
-    if (!string) {console.error('missing 1+ required parameters of GSDecode(string)'); return;};
-    GSDictionary = [];
-    let s = '';
-    // array to store each group [a, 1, b, 3, c, 456];
-    let b = [''];
-    // put dictionary in array
+    let newString = string;
+    let decoded = string;
     for (let i = 0; i < string.length; i++) {
-        if (!(string.at(i) == String.fromCharCode(255))) {
-            s += string.at(i);
-        } else {
-            s += String.fromCharCode(255)
-            break;
-        };
-        if (string.at(i) != ',') {
-            b[b.length - 1] += string.at(i);
-        } else {
-            b.push('')
+        // make sure character isn't reserved
+        if (string.charCodeAt(i) >= 128) {
+            let re = new RegExp(newString[i], 'g');
+            decoded = decoded.replaceAll(re, GSDictionary[string.charCodeAt(i)]);
         };
     };
-    // push to dictionary
-    for (let i = 0; i < b.length; i++) {
-        GSDictionary.push(b.at(i));
-    };
-    // grab string without dictionary
-    let final = string.replace(s, '');
-    // replace all the bytes according to the dictionary
-    for (let i = 0; i < GSDictionary.length; i++) {
-        let re = new RegExp(String.fromCharCode(i), 'g');
-        final = final.replaceAll(re, GSDictionary[i]);
-    };
-    GSOutput(final, 1);
+    return decoded;
 };
