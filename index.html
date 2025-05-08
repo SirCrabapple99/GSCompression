@@ -4,8 +4,8 @@
     <title>GSCompression</title>
   </head>
   <body>
-    <button onclick="GSEncode(window.prompt('input'), 2, 3)">encode</button><br>
-    <button onclick="GSDecode(window.prompt('input'))">decode</button><br><br>
+    <button onclick="GSEncode('TOBEORNOTTOBETOBEORNOTTOBE', 2, 3)">encode</button><br>
+    <button onclick="navigator.clipboard.writeText(window.prompt('input'))">decode</button><br><br>
     <div id="GSOutput">Input field</div>
     <script src="GSCompress.js"></script>
 </body>
